@@ -134,7 +134,7 @@ export default class DatabaseManagement {
               console.log('Error: '+err);
             });
           }).catch((err) => {
-            console.log('Error 2: '+err);
+            console.log('Error 3: '+err);
           });
         });  
       }
