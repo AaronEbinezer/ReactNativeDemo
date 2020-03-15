@@ -26,7 +26,9 @@ import {
   StatusBar,
   AsyncStorage,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Easing,
+  Animated
 } from 'react-native';
 
 
@@ -163,7 +165,7 @@ class HamburgerIcon extends React.Component {
 
         </TouchableOpacity>
 
-        <Text style ={{justifyContent:'center', alignItems:'center',  color :'white', flex:1, alignSelf:'center', textAlign: 'center', alignContent:'center',marginRight:50}}>KBG</Text>
+        <Text style ={{justifyContent:'center', alignItems:'center',  color :'white', flex:1, alignSelf:'center', textAlign: 'center', alignContent:'center',marginRight:50, fontSize:20, fontWeight: 'bold'}}>KBG</Text>
 
  
 
@@ -297,9 +299,37 @@ const MyCustomDrawerNav = createDrawerNavigator({
   initialRouteName: 'Home',
   drawerWidth: 250,
   drawerPosition: 'Left',
-  contentComponent: drawerScreen
+  contentComponent: drawerScreen,
+  transitionConfig
  
 });
+
+const transitionConfig = () => {
+  return {
+    transitionSpec: {
+      duration: 500,
+      easing: Easing.out(Easing.poly(4)),
+      timing: Animated.timing,
+      useNativeDriver: true,
+    },
+    screenInterpolator: sceneProps => {
+      const { layout, position, scene } = sceneProps;
+
+      const thisSceneIndex = scene.index;
+      const width = layout.initWidth;
+
+      const translateX = position.interpolate({
+        inputRange: [thisSceneIndex - 1, thisSceneIndex],
+        outputRange: [-width, 0],
+        extrapolate: 'clamp'
+      });
+
+      return {
+        transform: [{ translateX }]
+      }
+    }
+  }
+}
 
 export const MySwitchNavigator = createSwitchNavigator({ 
  

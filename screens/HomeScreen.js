@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Modal, FlatList, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Modal, Platform,
+     FlatList, Button, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import SplashScreen from 'react-native-splash-screen'
 import ModalDropdown from 'react-native-modal-dropdown';
 import DropdownMenu from 'react-native-dropdown-menu';
 import MyCustomAlert from './ModelScreen';
+import NetInfo from '@react-native-community/netinfo'
 import CardView from 'react-native-cardview' ;
 // import  Modal  from 'react-native-modalbox';
 // import  Modal  from 'react-native-modalbox';
@@ -112,6 +114,43 @@ export default class Home extends React.Component {
                 console.log(error);
             })
     }
+
+    unsubscribe = NetInfo.addEventListener(state => {
+        console.log("Connection type", state.type);
+        console.log("Is connected?", state.isConnected);
+      });
+
+    CheckConnectivity = () => {
+        // For Android devices
+        if (Platform.OS === "android") {
+          NetInfo.isConnected.fetch().then(isConnected => {
+            if (isConnected) {
+              Alert.alert("You are online!");
+            } else {
+              Alert.alert("You are offline!");
+            }
+          });
+        } else {
+          // For iOS devices
+          NetInfo.isConnected.addEventListener(
+            "connectionChange",
+            this.handleFirstConnectivityChange
+          );
+        }
+      };
+    
+      handleFirstConnectivityChange = isConnected => {
+        NetInfo.isConnected.removeEventListener(
+          "connectionChange",
+          this.handleFirstConnectivityChange
+        );
+    
+        if (isConnected === false) {
+          Alert.alert("You are offline!");
+        } else {
+          Alert.alert("You are online!");
+        }
+      };
 
     componentDidMount() {
         console.log('home');
@@ -229,6 +268,8 @@ export default class Home extends React.Component {
         )
     }
     render() {
+        
+        this.unsubscribe();
         return (
             <View style={styles.parent}>
                 {/* <View style={styles.toolBar}>
