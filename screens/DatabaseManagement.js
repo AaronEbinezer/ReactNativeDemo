@@ -22,7 +22,7 @@ export default class DatabaseManagement {
                 database_displayname,
                 database_size
               )
-                .then(DB => {
+            .then(DB => {
                   db = DB;
                   console.log("Database OPEN");
                   db.executeSql('SELECT 1 FROM Product LIMIT 1').then(() => {
