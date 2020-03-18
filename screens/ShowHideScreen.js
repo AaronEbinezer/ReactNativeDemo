@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert, Modal, Button,Animated, TouchableOpacity, FlatList, ScrollView , Image} from 'react-native';
+import { View, Text, StyleSheet, Alert, Modal, TouchableWithoutFeedback ,Button,Animated, TouchableOpacity, FlatList, ScrollView , Image} from 'react-native';
 import CardView from 'react-native-cardview';
 import GetLocation from 'react-native-get-location'
 import DatabaseManagement from './DatabaseManagement';
@@ -108,12 +108,45 @@ export default class DesignScreen extends React.Component{
  
     }
 
+    getProductList = () =>{
+        db.listProduct().then((data) => {
+            console.log(data);
+            this.setState({
+              products: data,
+            //   isLoading: false,
+            });
+          }).catch((err) => {
+            console.log('Error after Saving'+err);
+            this.setState = {
+            //   isLoading: false
+            }
+        }) 
+    }
+
     textView =() =>{
         return (
         
             <Text style={styles.cardViewText}> Visible</Text>
           
         )
+    }
+
+    listView = ({ item }) => {
+        
+        console.log(item.prodId,'hi');
+        return (
+
+            <TouchableOpacity onPress = {() =>this.selectedItem(item.prodId)}>
+            <CardView>
+                <Text>{item.prodId}</Text>
+
+            </CardView>
+            </TouchableOpacity>
+        );
+    }
+
+    selectedItem (data) {
+        console.log(data);
     }
 
     render (){
@@ -131,8 +164,14 @@ export default class DesignScreen extends React.Component{
         <View><Text>Christ the Jesus</Text></View>
         <View><Text>Latitude: {this.state.lat} Longitude: {this.state.lon} </Text></View>
         <TouchableOpacity> 
-                <Text onPress = {this.saveProduct}>Click Me</Text>
+                <Text onPress = {this.getProductList}>Click Me</Text>
             </TouchableOpacity>
+
+           <FlatList
+            data = {this.state.products}
+            renderItem = {this.listView}
+            keyExtractor = {item => item.prodId}
+           ></FlatList>
             
             </View>
 

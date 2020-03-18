@@ -83,7 +83,7 @@ export default class DatabaseManagement {
                     prodImage
                   });
                 }
-                console.log(products);
+                // console.log(products);
                 resolve(products);
               });
             }).then((result) => {
@@ -134,7 +134,7 @@ export default class DatabaseManagement {
               console.log('Error: '+err);
             });
           }).catch((err) => {
-            console.log('Error 3: '+err);
+            console.log('Error 2: '+err);
           });
         });  
       }
